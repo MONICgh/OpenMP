@@ -71,7 +71,7 @@ void treatment_P5 (FILE* fin, FILE* fout) {
     unsigned char mx = 0;
 
     auto f = [&] (unsigned char x) {
-        return (unsigned char) (int(x - mn) * 255 / int(mx - mn));
+        return (unsigned char) (int(x - mn) * SZ / int(mx - mn + 1));
     };
 
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
@@ -150,7 +150,7 @@ void treatment_P6 (FILE* fin, FILE* fout) {
     unsigned char mx = 0;
 
     auto f = [&] (unsigned char x) {
-        return (unsigned char) (int(x - mn) * 255 / int(mx - mn));
+        return (unsigned char) (int(x - mn) * SZ / int(mx - mn + 1));
     };
 
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
@@ -245,10 +245,10 @@ void plus_P5 (FILE* fin, FILE* fout, double k) {
     unsigned char mx = 0;
 
     auto f = [&] (unsigned char x) {
-        int pxl = (int(x - mn) * 255 / int(mx - mn));
+        int pxl = (int(x - mn) * SZ / int(mx - mn + 1));
         if (pxl < 0) return (unsigned char) 0;
         if (pxl > 255) return (unsigned char) 255;
-        return (unsigned char)(int(x - mn) * 255 / int(mx - mn));
+        return (unsigned char) pxl;
     };
 
 
@@ -354,10 +354,10 @@ void plus_P6 (FILE* fin, FILE* fout, double k) {
     unsigned char mx = 0;
 
     auto f = [&] (unsigned char x) {
-        int pxl = (int(x - mn) * 255 / int(mx - mn));
+        int pxl = (int(x - mn) * SZ / int(mx - mn + 1));
         if (pxl < 0) return (unsigned char) 0;
         if (pxl > 255) return (unsigned char) 255;
-        return (unsigned char)(int(x - mn) * 255 / int(mx - mn));
+        return (unsigned char) pxl;
     };
 
     if (flows == 0) {
