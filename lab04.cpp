@@ -471,6 +471,11 @@ void plus_P6 (FILE* fin, FILE* fout, double k) {
 
 int main (int argc, char const* argv[]) {
 
+    if (argc != 4 && argc != 5) {
+        cerr << "Error: Wrong number of arguments\n";
+        exit(0);
+    }
+
     flows = atoi(argv[1]);
 
     char const* fin_name = argv[2];
@@ -479,19 +484,32 @@ int main (int argc, char const* argv[]) {
     FILE* fin = fopen(fin_name, "rb");
     FILE* fout = fopen(fout_name, "wb");
 
+    if (!fin) {
+        cerr << "Error: Could not open the file\n";
+        exit(0);
+    }
+
     char type[2];
     fscanf(fin, "%c%c", &type[0], &type[1]);
     fprintf(fout, "%c%c ", type[0], type[1]);
 
     if (argc == 4) {
-        if (type[1] == '5') treatment_P5(fin, fout);
-        else treatment_P6(fin, fout);
+        if (type[0] = 'P' && type[1] == '5') treatment_P5(fin, fout);
+        else if (type[0] = 'P' && type[1] == '6') treatment_P6(fin, fout);
+        else {
+            cerr << "Error: The file format is not supported\n";
+            exit(0);
+        }   
     }
         
     else {
         double k = stod (argv[4]);
-        if (type[1] == '5') plus_P5(fin, fout, k);
-        else plus_P6(fin, fout, k);
+        if (type[0] = 'P' && type[1] == '5') plus_P5(fin, fout, k);
+        else if (type[0] = 'P' && type[1] == '6') plus_P6(fin, fout, k);
+        else {
+            cerr << "Error: The file format is not supported\n";
+            exit(0);
+        }   
     }
 
     fclose(fin);
