@@ -98,14 +98,11 @@ void treatment_P5 (FILE* fin, FILE* fout) {
         vector <unsigned char> mxs(flows);
 
         omp_set_num_threads(flows);
-        #pragma omp parallel
-        {
-            #pragma omp for schedule(KIND, CHUNK_SIZE)
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) {
-                    mns[omp_get_thread_num()] = min(mns[omp_get_thread_num()], pixels[i][j]);
-                    mxs[omp_get_thread_num()] = max(mxs[omp_get_thread_num()], pixels[i][j]);
-                }
+        #pragma omp parallel for schedule(KIND, CHUNK_SIZE) shared(mns, mxs)
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                mns[omp_get_thread_num()] = min(mns[omp_get_thread_num()], pixels[i][j]);
+                mxs[omp_get_thread_num()] = max(mxs[omp_get_thread_num()], pixels[i][j]);
             }
         }
 
@@ -115,13 +112,10 @@ void treatment_P5 (FILE* fin, FILE* fout) {
         }
 
         omp_set_num_threads(flows);
-        #pragma omp parallel
-        {
-            #pragma omp for schedule(KIND, CHUNK_SIZE)
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) {
-                    pixels[i][j] = f(pixels[i][j]);
-                }
+        #pragma omp parallel for schedule(KIND, CHUNK_SIZE) shared(pixels)
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                pixels[i][j] = f(pixels[i][j]);
             }
         }
     }
@@ -183,18 +177,15 @@ void treatment_P6 (FILE* fin, FILE* fout) {
         vector <unsigned char> mxs(flows);
 
         omp_set_num_threads(flows);
-        #pragma omp parallel
-        {
-            #pragma omp for schedule(KIND, CHUNK_SIZE)
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) {
-                    mns[omp_get_thread_num()] = min(mns[omp_get_thread_num()], pixels[i][j].r);
-                    mns[omp_get_thread_num()] = min(mns[omp_get_thread_num()], pixels[i][j].g);
-                    mns[omp_get_thread_num()] = min(mns[omp_get_thread_num()], pixels[i][j].b);
-                    mxs[omp_get_thread_num()] = max(mxs[omp_get_thread_num()], pixels[i][j].r);
-                    mxs[omp_get_thread_num()] = max(mxs[omp_get_thread_num()], pixels[i][j].g);
-                    mxs[omp_get_thread_num()] = max(mxs[omp_get_thread_num()], pixels[i][j].b);
-                }
+        #pragma omp parallel for schedule(KIND, CHUNK_SIZE) shared(mns, mxs)
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                mns[omp_get_thread_num()] = min(mns[omp_get_thread_num()], pixels[i][j].r);
+                mns[omp_get_thread_num()] = min(mns[omp_get_thread_num()], pixels[i][j].g);
+                mns[omp_get_thread_num()] = min(mns[omp_get_thread_num()], pixels[i][j].b);
+                mxs[omp_get_thread_num()] = max(mxs[omp_get_thread_num()], pixels[i][j].r);
+                mxs[omp_get_thread_num()] = max(mxs[omp_get_thread_num()], pixels[i][j].g);
+                mxs[omp_get_thread_num()] = max(mxs[omp_get_thread_num()], pixels[i][j].b);
             }
         }
 
@@ -204,15 +195,12 @@ void treatment_P6 (FILE* fin, FILE* fout) {
         }
 
         omp_set_num_threads(flows);
-        #pragma omp parallel
-        {
-            #pragma omp for schedule(KIND, CHUNK_SIZE)
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) {
-                    pixels[i][j].r = f(pixels[i][j].r);
-                    pixels[i][j].g = f(pixels[i][j].g);
-                    pixels[i][j].b = f(pixels[i][j].b);
-                }
+        #pragma omp parallel for schedule(KIND, CHUNK_SIZE) shared(pixels)
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                pixels[i][j].r = f(pixels[i][j].r);
+                pixels[i][j].g = f(pixels[i][j].g);
+                pixels[i][j].b = f(pixels[i][j].b);
             }
         }
     }
@@ -289,12 +277,9 @@ void plus_P5 (FILE* fin, FILE* fout, double k) {
         vector <vector <int>> srt (flows, vector <int> (SZ));
 
         omp_set_num_threads(flows);
-        #pragma omp parallel
-        {
-            #pragma omp for schedule(KIND, CHUNK_SIZE)
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) srt[omp_get_thread_num()][pixels[i][j]]++;
-            }
+        #pragma omp parallel for schedule(KIND, CHUNK_SIZE) shared(srt)
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) srt[omp_get_thread_num()][pixels[i][j]]++;
         }
         
         int pxls = 0;
@@ -316,15 +301,13 @@ void plus_P5 (FILE* fin, FILE* fout, double k) {
         }
 
         omp_set_num_threads(flows);
-        #pragma omp parallel
-        {
-            #pragma omp for schedule(KIND, CHUNK_SIZE)
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) {
-                    pixels[i][j] = f(pixels[i][j]);
-                }
+        #pragma omp parallel for schedule(KIND, CHUNK_SIZE) shared(pixels)
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                pixels[i][j] = f(pixels[i][j]);
             }
         }
+
     }
     
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -404,15 +387,12 @@ void plus_P6 (FILE* fin, FILE* fout, double k) {
         vector <vector <int>> srt (flows, vector <int> (SZ));
 
         omp_set_num_threads(flows);
-        #pragma omp parallel
-        {
-            #pragma omp for schedule(KIND, CHUNK_SIZE)
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) {
-                    srt[omp_get_thread_num()][pixels[i][j].r]++;
-                    srt[omp_get_thread_num()][pixels[i][j].g]++;
-                    srt[omp_get_thread_num()][pixels[i][j].b]++;
-                }
+        #pragma omp parallel for schedule(KIND, CHUNK_SIZE) shared(srt)
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                srt[omp_get_thread_num()][pixels[i][j].r]++;
+                srt[omp_get_thread_num()][pixels[i][j].g]++;
+                srt[omp_get_thread_num()][pixels[i][j].b]++;
             }
         }
 
@@ -440,15 +420,12 @@ void plus_P6 (FILE* fin, FILE* fout, double k) {
         
 
         omp_set_num_threads(flows);
-        #pragma omp parallel
-        {
-            #pragma omp for schedule(KIND, CHUNK_SIZE)
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < w; j++) {
-                    pixels[i][j].r = f(pixels[i][j].r);
-                    pixels[i][j].g = f(pixels[i][j].g);
-                    pixels[i][j].b = f(pixels[i][j].b);
-                }
+        #pragma omp parallel for schedule(KIND, CHUNK_SIZE) shared(pixels)
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                pixels[i][j].r = f(pixels[i][j].r);
+                pixels[i][j].g = f(pixels[i][j].g);
+                pixels[i][j].b = f(pixels[i][j].b);
             }
         }
     }
